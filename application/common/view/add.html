@@ -1,0 +1,302 @@
+{include file="common@common/meta"}
+<title>新增文章</title>
+<link href="/page/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<article class="page-container">
+	<form class="form form-horizontal" id="form-add" action="{:url()}" method="post">
+		{volist name="list" id="item"}
+		{switch name="item.kind"}
+			{case value="text"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" class="input-text"
+							   {foreach $item.optional as $key=>$value}
+							   {$key}="{$value}"
+							   {/foreach}
+							   id="{$item.name_e}" name="{$item.name_e}">
+					</div>
+				</div>
+			{/case}
+			{case value="select"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<span class="select-box">
+						<select name="{$item.name_e}" class="select">
+							{foreach $item.optional.options as $key=>$value}
+								{if condition="is_array($value) eq true"}
+									<option value="{$key}" selected>{$value[0]}</option>
+								{else /}
+									<option value="{$key}">{$value}</option>
+								{/if}
+							{/foreach}
+						</select>
+						</span>
+					</div>
+				</div>
+			{/case}
+			{case value="textarea"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<textarea name="{$item.name_e}" id="{$item.name_e}" class="textarea" onKeyUp="textarealength(this,'{$item.optional.max}')"></textarea>
+						<p class="textarea-numberbar"><em id="{$item.name_e}_length" class="textarea-length">0</em>/{$item.optional.max}</p>
+					</div>
+				</div>
+			{/case}
+			{case value="checkbox"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+						<div class="check-box">
+							<input type="checkbox" name="{$item.name_e}" id="checkbox_{$item.name_e}">
+							<label for="checkbox_{$item.name_e}"> </label>
+						</div>
+					</div>
+				</div>
+			{/case}
+			{case value="image"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<div class="uploader-thum-container">
+							<div id="fileList_{$item.name_e}" class="uploader-list"></div>
+							<div id="filePicker_{$item.name_e}">选择图片</div>
+							<button id="btn_start_{$item.name_e}" type="button" class="btn btn-default btn-uploadstar radius ml-10">开始上传</button>
+                            <button id="btn_reset_{$item.name_e}" type="button" class="btn btn-default btn-uploadstar radius ml-10">清除队列</button>
+						</div>
+					</div>
+                    <input id="{$item.name_e}" name="{$item.name_e}" type="hidden" value="">
+				</div>
+			{/case}
+			{case value="images"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<div class="uploader-list-container">
+							<div class="queueList">
+								<div id="dndArea" class="placeholder">
+									<div id="filePicker-2"></div>
+									<p>或将照片拖到这里，单次最多可选300张</p>
+								</div>
+							</div>
+							<div class="statusBar" style="display:none;">
+								<div class="progress"> <span class="text">0%</span> <span class="percentage"></span> </div>
+								<div class="info"></div>
+								<div class="btns">
+									<div id="filePicker2"></div>
+									<div class="uploadBtn">开始上传</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			{/case}
+			{case value="editor"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9"><script name="{$item.name_e}" id="editor_{$item.name_e}" type="text/plain" style="width:100%;height:400px;"></script></div>
+
+				</div>
+			{/case}
+			{case value="date"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="{$item.name_e}" name="{$item.name_e}" class="input-text Wdate" style="width:180px;">
+					</div>
+				</div>
+			{/case}
+			{case value="radio"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+						{foreach $item.optional.options as $key=>$value}
+							{if condition="is_array($value) eq true"}
+								<div class="radio-box">
+									<input name="{$item.name_e}" type="radio" id="{$item.name_e}_{$key}"  value="{$key}" checked>
+									<label for="{$item.name_e}_{$key}">{$value[0]}</label>
+								</div>
+							{else /}
+								<div class="radio-box">
+									<input name="{$item.name_e}" type="radio" id="{$item.name_e}_{$key}"  value="{$key}"  >
+									<label for="{$item.name_e}_{$key}">{$value}</label>
+								</div>
+							{/if}
+						{/foreach}
+					</div>
+				</div>
+			{/case}
+		{/switch}
+		{/volist}
+
+
+
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button onClick="common_add();" class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe632;</i> 提交</button>
+				<button onClick="layer_close();" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+{include file="common@common/footer"}
+
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/page/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="/page/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="/page/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="/page/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="/page/lib/webuploader/0.1.5/webuploader.min.js"></script>
+<script type="text/javascript" src="/page/lib/ueditor/1.4.3/ueditor.config.js"></script>
+<script type="text/javascript" src="/page/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
+<script type="text/javascript" src="/page/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+	function textarealength(id,max) {
+        if (id.value.length > max) {
+            id.value = id.value.substring(0, max);
+        }
+        $("#" + id.id + "_length").html(id.value.length);
+    }
+    function common_add() {
+
+    }
+</script>
+<script type="text/javascript">
+$(function(){
+	$('.skin-minimal input').iCheck({
+		checkboxClass: 'icheckbox-blue',
+		radioClass: 'iradio-blue',
+		increaseArea: '20%'
+	});
+
+
+
+    {volist name="list" id="item"}
+    	{switch name="item.kind"}
+    		{case value="editor"}
+    			var ue_{$item.name_e} = UE.getEditor('editor_{$item.name_e}');
+			{/case}
+			{case value="image"}
+                $list = $("#fileList_{$item.name_e}"),
+                    $btn = $("#btn_start_{$item.name_e}"),
+                    $btn_reset = $("#btn_reset_{$item.name_e}"),
+                    state = "pending",
+                    imgid_{$item.name_e}="",
+                    uploader_{$item.name_e};
+                var uploader_{$item.name_e} = WebUploader.create({
+                    swf: '/page/lib/webuploader/0.1.5/Uploader.swf',
+					fileVal:'image',
+                    // 文件接收服务端。
+                    server: "{:url('File/upload')}",
+                    fileNumLimit:1,
+                    // 选择文件的按钮。可选。
+                    // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                    pick: '#filePicker_{$item.name_e}',
+
+                    // 不压缩image, 默认如果是jpeg，文件上传前会压缩一把再上传！
+                    resize: false,
+                    // 只允许选择图片文件。
+                    accept: {
+                        title: 'Images',
+                        extensions: 'gif,jpg,jpeg,bmp,png',
+                        mimeTypes: 'image/*'
+                    }
+                });
+                uploader_{$item.name_e}.on( 'fileQueued', function( file ) {
+                    var $li = $(
+                        '<div id="' + file.id + '" class="tem">' +
+                        '<div class="pic-box"><img></div>'+
+                        '<div class="info">' + file.name + '</div>' +
+                        '<p class="state">等待上传...</p>'+
+                        '</div>'
+                        ),
+                        $img = $li.find('img');
+                        imgid_{$item.name_e} = file.id;
+                        console.log(file.id);
+                    $list.append( $li );
+
+                    // 创建缩略图
+                    // 如果为非图片文件，可以不用调用d此方法。
+                    // thumbnailWidth x thumbnailHeight 为 100 x 100
+                    uploader_{$item.name_e}.makeThumb( file, function( error, src ) {
+                        if ( error ) {
+                            $img.replaceWith('<span>不能预览</span>');
+                            return;
+                        }
+
+                        $img.attr( 'src', src );
+                    }, 100, 100 );
+                });
+                // 文件上传过程中创建进度条实时显示。
+                uploader_{$item.name_e}.on( 'uploadProgress', function( file, percentage ) {
+                    var $li = $( '#'+file.id ),
+                        $percent = $li.find('.progress-box .sr-only');
+
+                    // 避免重复创建
+                    if ( !$percent.length ) {
+                        $percent = $('<div class="progress-box"><span class="progress-bar radius"><span class="sr-only" style="width:0%"></span></span></div>').appendTo( $li ).find('.sr-only');
+                    }
+                    $li.find(".state").text("上传中");
+                    $percent.css( 'width', percentage * 100 + '%' );
+                });
+
+                // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+                uploader_{$item.name_e}.on( 'uploadSuccess', function( file ,response) {
+                    $( '#'+file.id ).addClass('upload-state-success').find(".state").text("已上传");
+                    $("#{$item.name_e}").val(response.savename);
+                });
+
+                // 文件上传失败，显示上传出错。
+                uploader_{$item.name_e}.on( 'uploadError', function( file ) {
+                    $( '#'+file.id ).addClass('upload-state-error').find(".state").text("上传出错");
+                });
+
+                // 完成上传完了，成功或者失败，先删除进度条。
+                uploader_{$item.name_e}.on( 'uploadComplete', function( file ) {
+                    $( '#'+file.id ).find('.progress-box').fadeOut();
+                });
+                uploader_{$item.name_e}.on('all', function (type) {
+                    if (type === 'startUpload') {
+                        state = 'uploading';
+                    } else if (type === 'stopUpload') {
+                        state = 'paused';
+                    } else if (type === 'uploadFinished') {
+                        state = 'done';
+                    }
+
+                    if (state === 'uploading') {
+                        $btn.text('暂停上传');
+                    } else {
+                        $btn.text('开始上传');
+                    }
+                });
+
+                $btn.on('click', function () {
+                    if (state === 'uploading') {
+                        uploader_{$item.name_e}.stop();
+                    } else {
+                        uploader_{$item.name_e}.upload();
+                    }
+                });
+                $btn_reset.on('click',function () {
+                    uploader_{$item.name_e}.removeFile( imgid_{$item.name_e} , true );
+                    $("#"+imgid_{$item.name_e}).remove();
+                    $("#{$item.name_e}").val("");
+                })
+			{/case}
+
+		{/switch}
+    {/volist}
+
+
+});
+
+</script>
+<!--/请在上方写此页面业务相关的脚本-->
+</body>
+</html>
