@@ -128,9 +128,22 @@ class Common extends Controller{
         $this->action["add"]["text"] = $text;
         return $this;
     }
+    public function set_delete_url($url,$text){
+        $this->action["delete"]["url"] = $url;
+        $this->action["delete"]["text"] = $text;
+        return $this;
+    }
     public function set_map($map_key){
         $this->map_key=$map_key;
         return $this;
+    }
+    public function delete(){
+        $common_model = model("Common");
+        $common_model->setTable($this->table_name);
+        foreach (input($this->map_key."/a") as $item){
+            $common_model->where($this->map_key,$item)->delete();
+        }
+        echo json_encode(["status"=>"1"]);
     }
 }
 

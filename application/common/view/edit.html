@@ -86,7 +86,7 @@
 			{case value="editor"}
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
-					<div class="formControls col-xs-8 col-sm-9"><script name="{$item.name_e}" id="editor_{$item.name_e}" type="text/plain" style="width:100%;height:400px;">{$data[$item.name_e]}</script></div>
+					<div class="formControls col-xs-8 col-sm-9"><script class="editor" name="{$item.name_e}" id="editor_{$item.name_e}" type="text/plain" style="width:100%;height:400px;">{$data[$item.name_e]}</script></div>
 
 				</div>
 			{/case}
@@ -171,6 +171,10 @@
 <script type="text/javascript" src="/page/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
 <script type="text/javascript" src="/page/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
 <script type="text/javascript">
+    var editor = {};
+    $(".editor").each(function (index) {
+        editor[index] = UE.getEditor($(this).attr("id"));
+    });
 	function textarealength(id,max) {
         if (id.value.length > max) {
             id.value = id.value.substring(0, max);
@@ -522,16 +526,6 @@ $(function(){
 		radioClass: 'iradio-blue',
 		increaseArea: '20%'
 	});
-
-    {volist name="list" id="item"}
-    	{switch name="item.kind"}
-    		{case value="editor"}
-    			var ue_{$item.name_e} = UE.getEditor('editor_{$item.name_e}');
-			{/case}
-		{/switch}
-    {/volist}
-
-
 });
 </script>
 <!--/请在上方写此页面业务相关的脚本-->

@@ -48,6 +48,12 @@ class Index extends Controller{
             ->set_map("id")
             ->edit();
     }
+    public function article_delete(){
+        if(request()->isPost()){
+            $list = new Common;
+            $list->table_name("article")->set_map("id")->delete();
+        }
+    }
     public function article(){
         $list = new Common;
         $list->add_Crumb("资讯管理",Url())
@@ -61,6 +67,7 @@ class Index extends Controller{
             ->add_field("fenlei1","分类栏目1","radio",["options"=>["1"=>"选择1","2"=>"选择2"],"sort"=>true])
             ->set_edit_url(url("article_edit",[],""),"编辑资讯")
             ->set_add_url(url("article_add"),"增加资讯")
+            ->set_delete_url(url("article_delete"),"删除资讯")
             ->table_name("article")
             ->set_map("id")
             ->set_title("文章列表")
