@@ -337,7 +337,7 @@ $(function(){
 (function( $ ){
     // 当domReady的时候开始初始化
     $(function() {
-        var $wrap = $('.uploader-list-container'),
+        var $wrap = $('.uploader_list_container_{$item.name_e}'),
 
             // 图片容器
             $queue = $( '<ul class="filelist"></ul>' )
@@ -482,7 +482,7 @@ $(function(){
             formData: {
                 uid: 123
             },
-            dnd: '#dndArea',
+            dnd: '#dndArea_{$item.name_e}',
             paste: '#uploader',
             swf: 'lib/webuploader/0.1.5/Uploader.swf',
             chunked: false,
@@ -526,19 +526,9 @@ $(function(){
             console.log('here');
         });
 
-        // uploader.on('filesQueued', function() {
-        //     uploader.sort(function( a, b ) {
-        //         if ( a.name < b.name )
-        //           return -1;
-        //         if ( a.name > b.name )
-        //           return 1;
-        //         return 0;
-        //     });
-        // });
-
         // 添加“添加文件”的按钮，
         uploader.addButton({
-            id: '#filePicker2',
+            id: '#filePicker2_{$item.name_e}',
             label: '继续添加'
         });
 

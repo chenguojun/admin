@@ -35,14 +35,15 @@ class Index extends Controller{
     }
     public function article_edit(){
         $list = new Common;
-        $list->add_field("img","图片","image")
-            ->add_field("title","名字","text",["placeholder"=>"测试place","require"=>true,"validate"=>"require|max:25"])
+        $list->add_field("title","名字","text",["placeholder"=>"测试place","require"=>true,"validate"=>"require|max:25"])
             ->add_field("fenlei","分类栏目","select",["options"=>["1"=>"选择1","2"=>"选择2"],"require"=>true])
             ->add_field("zhaiyao","文章摘要","textarea",["placeholder"=>"说点什么...最少输入10个字符","datatype"=>"*10-100","max"=>200,"require"=>true,"validate"=>"require|max:1000"])
             ->add_field("pinglun","允许评论","checkbox",["require"=>true])
             ->add_field("detail","详情","editor",["require"=>true,"validate"=>"require|max:1000"])
             ->add_field("selltime","销售时间","date",["require"=>true,"validate"=>"require"])
             ->add_field("fenlei1","分类栏目1","radio",["options"=>["1"=>"选择1","2"=>"选择2"],"require"=>true])
+            ->add_field("img","图片2","image")
+            ->add_field("images","图片1","images")
             ->table_name("article")
             ->set_map("id")
             ->edit();
@@ -62,6 +63,7 @@ class Index extends Controller{
             ->set_add_url(url("article_add"),"增加资讯")
             ->table_name("article")
             ->set_map("id")
+            ->set_title("文章列表")
             ->common_list();
     }
 }

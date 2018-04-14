@@ -12,6 +12,11 @@ class Common extends Controller{
     public $field = [];
     public $action = [];
     public $map_key = "";
+    public $title = "";
+    public function set_title($title){
+        $this->title=$title;
+        return $this;
+    }
     public function add_field($name,$description,$kind,$optional=[]){
         $item = [];
         $item["name_e"]=$name;
@@ -29,19 +34,25 @@ class Common extends Controller{
 //            throw new Exception('表名不能为空', 100001);
 //        }
         if(request()->isPost()){
+            $data = input("");
             $validate_rule = [];
+            $field = [];
             foreach ($this->item_list as $item){
                 if(!empty($item["optional"]["validate"])){
                     $validate_rule[$item["name_e"]]=$item["optional"]["validate"];
+                    $field[$item["name_e"]]=$item["name_c"];
+                }
+                if($item["kind"]=="checkbox"){
+                    $data[$item["name_e"]] = input($item["name_e"]) == "on" ? 1 : 0;
                 }
             }
-            $validate = new Validate($validate_rule);
-            if (!$validate->check(input(''))) {
-                dump($validate->getError());
+            $validate = new Validate($validate_rule,[],$field);
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             }
             $common_model = model("Common");
             $common_model->setTable($this->table_name);
-            $common_model->allowField(true)->save(input(""));
+            $common_model->allowField(true)->save($data);
             exit();
         }else{
             $this->assign("list",$this->item_list);
@@ -53,19 +64,25 @@ class Common extends Controller{
 //            throw new Exception('表名不能为空', 100001);
 //        }
         if(request()->isPost()){
+            $data = input("");
             $validate_rule = [];
+            $field = [];
             foreach ($this->item_list as $item){
-                if(!empty($item["optional"]["Validate"])){
+                if(!empty($item["optional"]["validate"])){
                     $validate_rule[$item["name_e"]]=$item["optional"]["validate"];
+                    $field[$item["name_e"]]=$item["name_c"];
+                }
+                if($item["kind"]=="checkbox"){
+                    $data[$item["name_e"]] = input($item["name_e"]) == "on" ? 1 : 0;
                 }
             }
-            $validate = new Validate($validate_rule);
-            if (!$validate->check(input(''))) {
-                dump($validate->getError());
+            $validate = new Validate($validate_rule,[],$field);
+            if (!$validate->check($data)) {
+                $this->error($validate->getError());
             }
             $common_model = model("Common");
             $common_model->setTable($this->table_name);
-            $common_model->allowField(true)->save(input(""),[$this->map_key=>input($this->map_key)]);
+            $common_model->allowField(true)->save($data,[$this->map_key=>input($this->map_key)]);
             $this->success("修改成功");
             exit();
         }else{
@@ -92,6 +109,7 @@ class Common extends Controller{
         $this->assign("count",$data["count"]);
         $this->assign("action",$this->action);
         $this->assign("map_key",$this->map_key);
+        $this->assign("title",$this->title);
         echo $this->fetch("common@/list");
     }
     public function add_Crumb($name,$url=""){
