@@ -13,8 +13,13 @@ class Common extends Controller{
     public $action = [];
     public $map_key = "";
     public $title = "";
+    public $notsort = "";
     public function set_title($title){
         $this->title=$title;
+        return $this;
+    }
+    public function set_notsort($data){
+        $this->notsort=$data;
         return $this;
     }
     public function add_field($name,$description,$kind,$optional=[]){
@@ -35,12 +40,15 @@ class Common extends Controller{
 //        }
         if(request()->isPost()){
             $data = input("");
-            $validate_rule = [];
+            $validate_rule = ["__token__"=>"require|token"];
             $field = [];
-            foreach ($this->item_list as $item){
+            foreach ($this->item_list as &$item){
                 if(!empty($item["optional"]["validate"])){
                     $validate_rule[$item["name_e"]]=$item["optional"]["validate"];
                     $field[$item["name_e"]]=$item["name_c"];
+                }
+                if(!empty($item["optional"]["function"])){
+                    $data[$item["name_e"]]=call_user_func($item["optional"]["function"],$data[$item["name_e"]]);
                 }
                 if($item["kind"]=="checkbox"){
                     $data[$item["name_e"]] = input($item["name_e"]) == "on" ? 1 : 0;
@@ -53,6 +61,7 @@ class Common extends Controller{
             $common_model = model("Common");
             $common_model->setTable($this->table_name);
             $common_model->allowField(true)->save($data);
+            $this->success("添加成功");
             exit();
         }else{
             $this->assign("list",$this->item_list);
@@ -65,12 +74,15 @@ class Common extends Controller{
 //        }
         if(request()->isPost()){
             $data = input("");
-            $validate_rule = [];
+            $validate_rule = ["__token__"=>"require|token"];
             $field = [];
             foreach ($this->item_list as $item){
                 if(!empty($item["optional"]["validate"])){
                     $validate_rule[$item["name_e"]]=$item["optional"]["validate"];
                     $field[$item["name_e"]]=$item["name_c"];
+                }
+                if(!empty($item["optional"]["function"])){
+                    $data[$item["name_e"]]=call_user_func($item["optional"]["function"],$data[$item["name_e"]]);
                 }
                 if($item["kind"]=="checkbox"){
                     $data[$item["name_e"]] = input($item["name_e"]) == "on" ? 1 : 0;
@@ -110,6 +122,7 @@ class Common extends Controller{
         $this->assign("action",$this->action);
         $this->assign("map_key",$this->map_key);
         $this->assign("title",$this->title);
+        $this->assign("notsort",$this->notsort);
         echo $this->fetch("common@/list");
     }
     public function add_Crumb($name,$url=""){

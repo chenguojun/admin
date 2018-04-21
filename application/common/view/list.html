@@ -96,14 +96,14 @@
 {include file="common@common/footer"}
 
 <!--请在下方写此页面业务相关的脚本-->
-<script type="text/javascript" src="/page/lib/My97DatePicker/4.8/WdatePicker.js"></script>
-<script type="text/javascript" src="/page/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="/page/lib/laypage/1.2/laypage.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Admin/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Admin//lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="__PUBLIC__/Admin/lib/laypage/1.2/laypage.js"></script>
 <script type="text/javascript">
     $('.table-sort').dataTable({
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
-            {"orderable":false,"aTargets":[0,8]}// 不参与排序的列
+            {"orderable":false,"aTargets":{notempty name="notsort"}{$notsort}{else / }[0]{/notempty}}// 不参与排序的列
         ]
     });
 

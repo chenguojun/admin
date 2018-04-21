@@ -1,6 +1,6 @@
 {include file="common@common/meta"}
 <title>新增</title>
-<link href="/page/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+<link href="__PUBLIC__/Admin/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
 <article class="page-container">
@@ -12,12 +12,39 @@
 					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<input type="text" class="input-text"
+							   {notempty name="$item.optional"}
 							   {foreach $item.optional as $key=>$value}
 							   {$key}="{$value}"
-							   {/foreach}
+							   {/foreach}{/notempty}
 							   id="{$item.name_e}" name="{$item.name_e}">
 					</div>
 				</div>
+			{/case}
+			{case value="password"}
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="password" class="input-text"
+						   {notempty name="$item.optional"}
+						   {foreach $item.optional as $key=>$value}
+					{$key}="{$value}"
+					{/foreach}{/notempty}
+					id="{$item.name_e}" name="{$item.name_e}">
+				</div>
+			</div>
+			{/case}
+			{case value="repassword"}
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="password" class="input-text"
+						   {notempty name="$item.optional"}
+						   {foreach $item.optional as $key=>$value}
+					{$key}="{$value}"
+					{/foreach}{/notempty}
+					id="{$item.name_e}" name="{$item.name_e}">
+				</div>
+			</div>
 			{/case}
 			{case value="select"}
 				<div class="row cl">
@@ -66,6 +93,9 @@
 					</div>
 				</div>
 			</div>
+			{/case}
+			{case value="hidden"}
+			<input type="hidden" name="{$item.name_e}" id="{$item.name_e}" value="{notempty name='$item.optional.value'}{$item.optional.value}{/notempty}">
 			{/case}
 			{case value="image"}
 			<div class="row cl">
@@ -155,7 +185,7 @@
 		{/switch}
 		{/volist}
 
-
+		<input type="hidden" name="__token__" value="{$Request.token}" />
 
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">

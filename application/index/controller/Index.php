@@ -1,21 +1,8 @@
 <?php
 namespace app\index\controller;
 use app\common\controller\Common;
-use think\Controller;
-class Index extends Controller{
-    public function _initialize(){
-        parent::_initialize();
-        $menu = [
-            ["title"=>"资讯管理","name"=>"article","icon"=>"&#xe616;","sub_menu"=>[
-                ["title"=>"资讯管理","url"=>Url("article")]
-            ]],
-            ["title"=>"图片管理","name"=>"picture","icon"=>"&#xe613;","sub_menu"=>[
-                ["title"=>"图片管理","url"=>Url("picture_list")]
-            ]],
-        ];
-        $this->assign("menu",$menu);
-    }
-
+use app\common\controller\Base;
+class Index extends Base{
     public function index(){
         echo $this->fetch("index@/index");
     }
@@ -71,6 +58,7 @@ class Index extends Controller{
             ->table_name("article")
             ->set_map("id")
             ->set_title("文章列表")
+            ->set_notsort("[0,8]")
             ->common_list();
     }
 }

@@ -1,8 +1,6 @@
 {include file="common@common/meta"}
 
-    <title>H-ui.admin v3.0</title>
-    <meta name="keywords" content="H-ui.admin v3.0,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
-    <meta name="description" content="H-ui.admin v3.0，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
+    <title>羽翼后台管理系统 v1.0</title>
 </head>
 <body>
 {include file="common@common/header"}
@@ -16,11 +14,11 @@
         <a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a></nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <p class="f-20 text-success">欢迎使用H-ui.admin
-                <span class="f-14">v2.3</span>
-                后台模版！</p>
+            <p class="f-20 text-success">欢迎使用羽翼后台管理系统
+                <span class="f-14">v1.0</span>
+                ！</p>
             <p>登录次数：18 </p>
-            <p>上次登录IP：222.35.131.79.1  上次登录时间：2014-6-14 11:19:55</p>
+            <p>上次登录IP：{:Model('User')->get_user_info()['last_login_ip']}  上次登录时间：{:time_format(Model('User')->get_user_info()['last_login_time'])}</p>
             <table class="table table-border table-bordered table-bg">
                 <thead>
                 <tr>
@@ -91,91 +89,67 @@
                 </tr>
                 <tr>
                     <td>服务器IP地址</td>
-                    <td>192.168.1.1</td>
+                    <td>{:GetHostByName($_SERVER['SERVER_NAME'])}</td>
                 </tr>
                 <tr>
                     <td>服务器域名</td>
-                    <td>www.h-ui.net</td>
+                    <td>{$_SERVER['HTTP_HOST']}</td>
                 </tr>
                 <tr>
                     <td>服务器端口 </td>
-                    <td>80</td>
+                    <td>{$_SERVER['SERVER_PORT']}</td>
                 </tr>
                 <tr>
-                    <td>服务器IIS版本 </td>
-                    <td>Microsoft-IIS/6.0</td>
+                    <td>服务器版本 </td>
+                    <td>{$_SERVER["SERVER_SOFTWARE"]}</td>
+                </tr>
+                <tr>
+                    <td>PHP版本 </td>
+                    <td>{:PHP_VERSION}</td>
+                </tr>
+                <tr>
+                    <td>PHP运行方式 </td>
+                    <td>{:php_sapi_name()}</td>
                 </tr>
                 <tr>
                     <td>本文件所在文件夹 </td>
-                    <td>D:\WebSite\HanXiPuTai.com\XinYiCMS.Web\</td>
+                    <td>{:dirname(__FILE__)}</td>
                 </tr>
                 <tr>
                     <td>服务器操作系统 </td>
-                    <td>Microsoft Windows NT 5.2.3790 Service Pack 2</td>
+                    <td>{:php_uname()}</td>
                 </tr>
                 <tr>
                     <td>系统所在文件夹 </td>
-                    <td>C:\WINDOWS\system32</td>
+                    <td>{$_SERVER['SystemRoot']}</td>
                 </tr>
                 <tr>
                     <td>服务器脚本超时时间 </td>
-                    <td>30000秒</td>
+                    <td>{:ini_get("max_execution_time")}秒</td>
                 </tr>
                 <tr>
                     <td>服务器的语言种类 </td>
-                    <td>Chinese (People's Republic of China)</td>
-                </tr>
-                <tr>
-                    <td>.NET Framework 版本 </td>
-                    <td>2.050727.3655</td>
+                    <td>{$_SERVER['HTTP_ACCEPT_LANGUAGE']}</td>
                 </tr>
                 <tr>
                     <td>服务器当前时间 </td>
-                    <td>2014-6-14 12:06:23</td>
-                </tr>
-                <tr>
-                    <td>服务器IE版本 </td>
-                    <td>6.0000</td>
-                </tr>
-                <tr>
-                    <td>服务器上次启动到现在已运行 </td>
-                    <td>7210分钟</td>
-                </tr>
-                <tr>
-                    <td>逻辑驱动器 </td>
-                    <td>C:\D:\</td>
-                </tr>
-                <tr>
-                    <td>CPU 总数 </td>
-                    <td>4</td>
+                    <td>{:date("Y-m-d H:i:s",time())}</td>
                 </tr>
                 <tr>
                     <td>CPU 类型 </td>
-                    <td>x86 Family 6 Model 42 Stepping 1, GenuineIntel</td>
-                </tr>
-                <tr>
-                    <td>虚拟内存 </td>
-                    <td>52480M</td>
+                    <td>{$_SERVER['PROCESSOR_IDENTIFIER']}</td>
                 </tr>
                 <tr>
                     <td>当前程序占用内存 </td>
-                    <td>3.29M</td>
-                </tr>
-                <tr>
-                    <td>Asp.net所占内存 </td>
-                    <td>51.46M</td>
-                </tr>
-                <tr>
-                    <td>当前Session数量 </td>
-                    <td>8</td>
+                    <td>{:memory_get_usage()/1024/1024}MB</td>
                 </tr>
                 <tr>
                     <td>当前SessionID </td>
-                    <td>gznhpwmp34004345jz2q3l45</td>
+                    <td>{:session_id()}</td>
                 </tr>
                 <tr>
                     <td>当前系统用户名 </td>
-                    <td>NETWORK SERVICE</td>
+                    <td>{:Get_Current_User()}</td>
                 </tr>
                 </tbody>
             </table>
