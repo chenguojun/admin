@@ -38,6 +38,7 @@ class User extends Base{
             ->add_field("role","账号角色","select",["options"=>$role_list1])
             ->add_field("hidden","隐藏的","hidden",["value"=>"123"])
             ->table_name("user")
+            ->set_name("用户增加")
             ->set_title("用户列表")
             ->add();
     }
@@ -52,8 +53,15 @@ class User extends Base{
         $list->add_field("username","用户名","text",["validate"=>"require"])
             ->add_field("role","账号角色","select",["options"=>$role_list1])
             ->table_name("user")
+            ->set_name("用户编辑")
             ->set_map("id")
             ->edit();
+    }
+    public function user_delete(){
+        if(request()->isPost()){
+            $list = new Common;
+            $list->table_name("user")->set_name("删除用户")->set_map("id")->delete();
+        }
     }
     public function role(){
         $role_1ist = db("role")->select();

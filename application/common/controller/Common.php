@@ -14,8 +14,13 @@ class Common extends Controller{
     public $map_key = "";
     public $title = "";
     public $notsort = "";
+    public $a_name = "新建内容";
     public function set_title($title){
         $this->title=$title;
+        return $this;
+    }
+    public function set_name($title){
+        $this->a_name=$title;
         return $this;
     }
     public function set_notsort($data){
@@ -61,6 +66,7 @@ class Common extends Controller{
             $common_model = model("Common");
             $common_model->setTable($this->table_name);
             $common_model->allowField(true)->save($data);
+            system_log("新建内容(id:".$common_model->id .",模块:".$this->a_name.")","内容操作");
             $this->success("添加成功");
             exit();
         }else{
@@ -95,6 +101,7 @@ class Common extends Controller{
             $common_model = model("Common");
             $common_model->setTable($this->table_name);
             $common_model->allowField(true)->save($data,[$this->map_key=>input($this->map_key)]);
+            system_log("编辑内容(id:".$common_model->id .",模块:".$this->a_name.")","内容操作");
             $this->success("修改成功");
             exit();
         }else{
@@ -154,6 +161,7 @@ class Common extends Controller{
         $common_model = model("Common");
         $common_model->setTable($this->table_name);
         foreach (input($this->map_key."/a") as $item){
+            system_log("删除内容(id:".$item .",模块:".$this->a_name.")","内容操作");
             $common_model->where($this->map_key,$item)->delete();
         }
         echo json_encode(["status"=>"1"]);
