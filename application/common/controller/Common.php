@@ -11,10 +11,17 @@ class Common extends Controller{
     public $table_name = "";
     public $field = [];
     public $action = [];
+    public $search = [];
     public $map_key = "";
     public $title = "";
-    public $notsort = "";
+    public $notsort = "[0]";
     public $a_name = "新建内容";
+    public function set_search($kind=null,$time=null,$name=null){
+        $this->search["kind"]=$kind;
+        $this->search["time"]=$time;
+        $this->search["name"]=$name;
+        return $this;
+    }
     public function set_title($title){
         $this->title=$title;
         return $this;
@@ -123,11 +130,17 @@ class Common extends Controller{
         $this->assign("crumb_list",$this->crumb_list);
         $common_model = model("Common");
         $common_model->setTable($this->table_name);
-        $data = $common_model->get_true_data();
+        if (input("?get.search_kind") || input("?get.search_name") || input("?get.search_time_max") || input("?get.search_time_min")){
+            $data = $common_model->get_true_data($this->search,input("get."));
+            $this->assign("search_data",input("get."));
+        }else{
+            $data = $common_model->get_true_data();
+        }
         $this->assign("data",$data["data_list"]);
         $this->assign("count",$data["count"]);
         $this->assign("action",$this->action);
         $this->assign("map_key",$this->map_key);
+        $this->assign("search",$this->search);
         $this->assign("title",$this->title);
         $this->assign("notsort",$this->notsort);
         echo $this->fetch("common@/list");

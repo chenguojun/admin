@@ -42,3 +42,16 @@ function system_log($action,$kind){
     $data["ip"]=request()->ip();
     db("system_log")->insert($data);
 }
+
+/**
+ * @param $time
+ * @return false|string
+ * 格式化日期
+ */
+function date_now($time=null){
+    if(empty($time)){
+        return date("Y-m-d",time());
+    }else{
+        return date("Y-m-d",$time);
+    }
+}

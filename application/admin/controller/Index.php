@@ -55,6 +55,7 @@ class Index extends Base{
             ->set_edit_url(url("article_edit",[],""),"编辑资讯")
             ->set_add_url(url("article_add"),"增加资讯")
             ->set_delete_url(url("article_delete"),"删除资讯")
+            ->set_search("fenlei","selltime","title")
             ->table_name("article")
             ->set_map("id")
             ->set_title("文章列表")

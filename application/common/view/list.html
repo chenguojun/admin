@@ -21,21 +21,37 @@
     </nav>
     <div class="Hui-article">
         <article class="cl pd-20">
-            <div class="text-c">
-				<span class="select-box inline">
-				<select name="" class="select">
-					<option value="0">全部分类</option>
-					<option value="1">分类一</option>
-					<option value="2">分类二</option>
-				</select>
-				</span>
-                日期范围：
-                <input type="text" onfocus="WdatePicker()" id="logmin" class="input-text Wdate" style="width:120px;">
-                -
-                <input type="text" onfocus="WdatePicker()" id="logmax" class="input-text Wdate" style="width:120px;">
-                <input type="text" name="" id="" placeholder=" 资讯名称" style="width:250px" class="input-text">
-                <button id="btn_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜资讯</button>
-            </div>
+            {notempty name="$search"}
+                <form action="" method="get">
+                    <div class="text-c">
+                        {notempty name="$search.kind"}
+                            <span class="select-box inline">
+                            <select name="search_kind" class="select">
+                                <option value="0">全部分类</option>
+                                {volist name="list" id="item"}
+                                    {if condition="$item.name_e eq $search.kind"}
+                                        {foreach name="$item.optional.options" item="vo" key="k" }
+                                            <option value="{$k}">{$vo}</option>
+                                        {/foreach}
+                                    {/if}
+                                {/volist}
+
+                            </select>
+                            </span>
+                        {/notempty}
+                        {notempty name="$search.time"}
+                            日期范围：
+                            <input type="text" onfocus="WdatePicker()" value="{notempty name='$search_data.search_time_min'}{$search_data.search_time_min}{/notempty}" id="logmin" name="search_time_min" class="input-text Wdate" style="width:120px;">
+                            -
+                            <input type="text" onfocus="WdatePicker()" value="{notempty name='$search_data.search_time_max'}{$search_data.search_time_max}{/notempty}" id="logmax" name="search_time_max" class="input-text Wdate" style="width:120px;">
+                        {/notempty}
+                        {notempty name="$search.name"}
+                            <input type="text" name="search_name" value="{notempty name='$search_data.search_name'}{$search_data.search_name}{/notempty}" id="search_name" placeholder=" 资讯名称" style="width:250px" class="input-text">
+                        {/notempty}
+                        <button id="btn_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜资讯</button>
+                    </div>
+                </form>
+            {/notempty}
             <div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
 				<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
@@ -103,7 +119,7 @@
     $('.table-sort').dataTable({
         "bStateSave": true,//状态保存
         "aoColumnDefs": [
-            {"orderable":false,"aTargets":{notempty name="notsort"}{$notsort}{else / }[0]{/notempty}}// 不参与排序的列
+            {"orderable":false,"aTargets":{$notsort}}// 不参与排序的列
         ]
     });
 
