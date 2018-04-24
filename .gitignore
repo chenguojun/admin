@@ -8,3 +8,4 @@
 public/uploads/
 *.jpg
 page/*
+phpmyadmin/*

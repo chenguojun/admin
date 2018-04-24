@@ -1,10 +1,10 @@
 <?php
-namespace app\index\controller;
+namespace app\admin\controller;
 use app\common\controller\Common;
 use app\common\controller\Base;
 class Index extends Base{
     public function index(){
-        echo $this->fetch("index@/index");
+        echo $this->fetch("admin@/index");
     }
     public function article_add(){
         $list = new Common;

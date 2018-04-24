@@ -1,5 +1,5 @@
 <?php
-namespace app\index\controller;
+namespace app\admin\controller;
 use think\Controller;
 use think\captcha\Captcha;
 use app\common\controller\Common;
@@ -41,54 +41,66 @@ class User extends Base{
             ->set_title("用户列表")
             ->add();
     }
+    public function user_edit(){
+        $user = Model("User");
+        $role_list = $user->get_role_rule();
+        $role_list1 = [];
+        foreach ($role_list as $item){
+            $role_list1[$item["id"]]=$item["role_name"];
+        }
+        $list = new Common;
+        $list->add_field("username","用户名","text",["validate"=>"require"])
+            ->add_field("role","账号角色","select",["options"=>$role_list1])
+            ->table_name("user")
+            ->set_map("id")
+            ->edit();
+    }
     public function role(){
         $role_1ist = db("role")->select();
+        $user_list = db("user")->select();
+        $list=[];
+        foreach ($user_list as $i){
+            $role_id = $i["role"];
+            $list[$role_id][]=$i["username"];
+        }
+        var_dump($list);
         $this->assign("role_list",$role_1ist);
-        return $this->fetch("Index@/role");
+        $this->assign("user_list",$list);
+        return $this->fetch("admin@/role");
     }
     public function role_add(){
         if(request()->isPost()){
-            $k=1;
             $post = input("post.");
-            $auth = "";
-            foreach ($this->auth as $item){
-                if(empty($item["sub_auth"])){
-                    if(!empty($post["auth_".$k])){
-                        foreach ($post["auth_".$k] as $key=>$item1){
-                            if($item1=="1" && $key!="own"){
-                                $auth .= $item["action"][$key]."|";
-                            }
-                        }
-                    }
-                }else{
-                    $i=1;
-                    foreach ($item["sub_auth"] as $item1){
-                        foreach ($post["auth_".$k."_".$i] as $key=>$item2){
-                            if($item2=="1" && $key!="own"){
-                                $auth .= $item1["action"][$key]."|";
-                            }
-                        }
-                        $i++;
-                    }
-                }
-                $k++;
+            if (empty($post["role_nam"])){
+                $this->error("角色名不能为空");
             }
-            db("role")->insert(["role_name"=>$post["role_name"],"description"=>$post["description"],"value"=>$auth]);
+            $auth = "";
+            if(!empty($post["auth"])){
+                foreach ($post["auth"] as $item){
+                    $auth .= $item ."|";
+                }
+            }
+            $index = db("role")->insert(["role_name"=>$post["role_name"],"description"=>$post["description"],"value"=>$auth]);
+            system_log("新增角色(id:".$index.")","角色操作");
             $this->success("新增成功");
             exit();
         }
-        return $this->fetch("Index@/role_add");
+        return $this->fetch("admin@/role_add");
     }
     public function login(){
         if (request()->isPost()) {
             $username = input('username');
             $password = input('password');
+            $captcha = input('captcha');
             if (empty($username)) {
                 $this->error('用户名不能为空');
             }
             if (empty($password)) {
                 $this->error('密码不能为空');
             }
+            if(!captcha_check($captcha)){
+                $this->error('验证码错误');
+            };
             $User = Model('User');
             if (!$User->is_user_exists($username)) {
                 $this->error('用户不存在');
@@ -101,9 +113,10 @@ class User extends Base{
                 $this->error('登录失败，请重试');
             }
             session("auth_token",$auth_token);
+            system_log("登录系统成功","登录系统");
             $this->success('登录成功', url("Index/index"));
         }else{
-            echo $this->fetch("index@/login");
+            echo $this->fetch("admin@/login");
         }
     }
     public function get_captcha(){
@@ -113,24 +126,26 @@ class User extends Base{
         return $captcha->entry();
     }
     public function logout(){
+        system_log("退出登录成功","登出系统");
         $User = Model("User");
-        $auth_token = $User->get_user_info()["auth_token"];
         $User->logout();
-        session("auth_token","");
+        session("auth_token",null);
         $this->success("退出登录成功",url("User/login"));
     }
     public function change_pwd(){
         if (request()->isPost()){
             $User = Model("User");
             $User->change_password(input("newpassword"));
+            system_log("修改密码成功","账户操作");
             $this->success("修改成功");
         }
-        return $this->fetch("Index@/change_pwd");
+        return $this->fetch("admin@/change_pwd");
     }
     public function role_delete(){
         if(request()->isPost()){
             $User = Model("User");
             if($User->role_delete(input("id"))){
+                system_log("删除角色","角色操作");
                 echo json_encode(["status"=>1]);
             }
         }

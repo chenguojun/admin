@@ -25,3 +25,20 @@ function time_format($time){
 function get_role_name($role_id){
     return db("role")->where("id",$role_id)->select()[0]["role_name"];
 }
+
+/**
+ * @return string
+ * 返回当前模块.控制器.操作
+ */
+function get_now_action(){
+    return request()->module().".".request()->controller().".".request()->action();
+}
+
+function system_log($action,$kind){
+    $user = model("User");
+    $data["type"]=$kind;
+    $data["content"]=$action;
+    $data["username"]=$user->get_user_info()["username"];
+    $data["ip"]=request()->ip();
+    db("system_log")->insert($data);
+}
