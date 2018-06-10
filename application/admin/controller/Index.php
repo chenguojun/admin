@@ -52,6 +52,7 @@ class Index extends Base{
             ->add_field("pinglun","允许评论","checkbox")
             ->add_field("selltime","销售时间","date")
             ->add_field("fenlei1","分类栏目1","radio",["options"=>["1"=>"选择1","2"=>"选择2"],"sort"=>true])
+            ->add_field("time","时间","function",["function_name"=>"date_now","parameter"=>["##"]])
             ->set_edit_url(url("article_edit",[],""),"编辑资讯")
             ->set_add_url(url("article_add"),"增加资讯")
             ->set_delete_url(url("article_delete"),"删除资讯")
@@ -59,7 +60,7 @@ class Index extends Base{
             ->table_name("article")
             ->set_map("id")
             ->set_title("文章列表")
-            ->set_notsort("[0,8]")
+            ->set_notsort("[0,2,9]")
             ->common_list();
     }
 }

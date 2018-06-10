@@ -92,6 +92,18 @@
                                         <td>否</td>
                                     {/if}
                                 {/case}
+                                {case value="function"}
+                                    {if condition="is_array($item.optional.parameter) eq 1"}
+                                        {php}
+                                            foreach($item['optional']['parameter'] as &$vo){
+                                                if($vo=="##")$vo=$data_item[$item['name_e']];
+                                            }
+                                        {/php}
+                                        <td>{:call_user_func_array($item.optional.function_name,$item.optional.parameter)}</td>
+                                    {else /}
+                                        <td>{:call_user_func($item.optional.function_name,$data_item[$item.name_e])}</td>
+                                    {/if}
+                                {/case}
                                 {default /}
                                     <td>{$data_item[$item.name_e]}</td>
                             {/switch}

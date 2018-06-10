@@ -47,9 +47,6 @@ class Common extends Controller{
         return $this;
     }
     public function add(){
-//        if(empty($this->table_name)){
-//            throw new Exception('表名不能为空', 100001);
-//        }
         if(request()->isPost()){
             $data = input("");
             $validate_rule = ["__token__"=>"require|token"];
@@ -82,9 +79,6 @@ class Common extends Controller{
         }
     }
     public function edit(){
-//        if(empty($this->table_name)){
-//            throw new Exception('表名不能为空', 100001);
-//        }
         if(request()->isPost()){
             $data = input("");
             $validate_rule = ["__token__"=>"require|token"];
