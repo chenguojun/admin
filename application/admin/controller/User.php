@@ -79,7 +79,7 @@ class User extends Base{
     public function role_add(){
         if(request()->isPost()){
             $post = input("post.");
-            if (empty($post["role_nam"])){
+            if (empty($post["role_name"])){
                 $this->error("角色名不能为空");
             }
             $auth = "";
