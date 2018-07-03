@@ -31,7 +31,11 @@ function get_role_name($role_id){
  * 返回当前模块.控制器.操作
  */
 function get_now_action(){
-    return request()->module().".".request()->controller().".".request()->action();
+    if(input("op")=="edit" || input("op")=="add" || input("op")=="delete"){
+        return request()->module().".".request()->controller().".".request()->action()."_".input("op");
+    }else{
+        return request()->module().".".request()->controller().".".request()->action();
+    }
 }
 
 function system_log($action,$kind){
