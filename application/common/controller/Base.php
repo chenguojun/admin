@@ -3,6 +3,9 @@ namespace app\common\controller;
 use \think\Controller;
 class Base extends Controller{
     protected $auth;
+    public function ok(){
+        echo "<script type='text/javascript'>var index = parent.layer.getFrameIndex(window.name);parent.layer.close(index);</script>";
+    }
     public function _initialize(){
         parent::_initialize();
         $user = Model("User");

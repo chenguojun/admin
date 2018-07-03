@@ -4,7 +4,7 @@
 </head>
 <body>
 <article class="page-container">
-	<form class="form form-horizontal" id="form-add" action="{:url('',[$map_key=>input($map_key)])}" method="post">
+	<form class="form form-horizontal" id="form-add" action="{:url('',[$map_key=>input($map_key),'op'=>'edit'])}" method="post">
 		{volist name="list" id="item"}
 		{switch name="item.kind"}
 			{case value="text"}
@@ -26,6 +26,11 @@
 						<span class="select-box">
 						<select name="{$item.name_e}" class="select">
 							{foreach $item.optional.options as $key=>$value}
+								{php}
+									if(is_array($value)){
+										$value=$value[0];
+									}
+								{/php}
 								{if condition="$data[$item.name_e] eq $key"}
 									<option value="{$key}" selected>{$value}</option>
 								{else /}
@@ -103,6 +108,11 @@
 					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 						{foreach $item.optional.options as $key=>$value}
+							{php}
+								if(is_array($value)){
+									$value=$value[0];
+								}
+							{/php}
 							{if condition="$key eq $data[$item.name_e]"}
 								<div class="radio-box">
 									<input name="{$item.name_e}" type="radio" id="{$item.name_e}_{$key}"  value="{$key}" checked>

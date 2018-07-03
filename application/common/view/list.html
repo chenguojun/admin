@@ -1,5 +1,5 @@
 {include file="common@common/meta"}
-    <title>{$title}</title>
+    <title>{$name}列表</title>
 </head>
 <body>
 {include file="common@common/header"}
@@ -31,11 +31,14 @@
                                 {volist name="list" id="item"}
                                     {if condition="$item.name_e eq $search.kind"}
                                         {foreach name="$item.optional.options" item="vo" key="k" }
-                                            <option value="{$k}">{$vo}</option>
+                                            {if condition="is_array($vo) eq true"}
+                                                <option value="{$k}">{$vo[0]}</option>
+                                            {else /}
+                                                <option value="{$k}">{$vo}</option>
+                                            {/if}
                                         {/foreach}
                                     {/if}
                                 {/volist}
-
                             </select>
                             </span>
                         {/notempty}
@@ -55,7 +58,7 @@
             <div class="cl pd-5 bg-1 bk-gray mt-20">
 				<span class="l">
 				<a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a>
-				{notempty name="$action.add"}<a class="btn btn-primary radius" data-title="{$action.add.text}" _href="{$action.add.url}" onclick="common_add('{$action.add.text}','{$action.add.url}')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> {$action.add.text}</a>{/notempty}
+				<a class="btn btn-primary radius" data-title="{:url('',['op'=>'add'])}" _href="{:url('',['op'=>'add'])}" onclick="common_add('编辑','{:url(\'\',[\'op\'=>\'add\'])}')" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 新增{$name}</a>
 				</span>
                 <span class="r">共有数据：<strong>{$count}</strong> 条</span>
             </div>
@@ -77,10 +80,22 @@
                         {volist name="list" id="item"}
                             {switch name="item.kind"}
                                 {case value="select"}
-                                    <td>{$item.optional.options[$data_item[$item.name_e]]}</td>
+                                    <td>
+                                        {if condition="is_array($item.optional.options[$data_item[$item.name_e]]) eq true"}
+                                            {$item.optional.options[$data_item[$item.name_e]][0]}
+                                        {else /}
+                                            {$item.optional.options[$data_item[$item.name_e]]}
+                                        {/if}
+                                    </td>
                                 {/case}
                                 {case value="radio"}
-                                    <td>{$item.optional.options[$data_item[$item.name_e]]}</td>
+                                    <td>
+                                        {if condition="is_array($item.optional.options[$data_item[$item.name_e]]) eq true"}
+                                            {$item.optional.options[$data_item[$item.name_e]][0]}
+                                        {else /}
+                                            {$item.optional.options[$data_item[$item.name_e]]}
+                                        {/if}
+                                    </td>
                                 {/case}
                                 {case value="image"}
                                     <td><img {notempty name="$item.optional.class"}class="{$item.optional.class}"{/notempty} src="{$data_item[$item.name_e]}" {notempty name="$item.optional.attr"}{$item.optional.attr}{/notempty}></td>
@@ -109,7 +124,7 @@
                             {/switch}
                         {/volist}
                         <td class="f-14 td-manage">
-                            {notempty name="$action.edit"}<a style="text-decoration:none" class="ml-5" onClick="common_edit('{$action.edit.text}','{$action.edit.url}','{$data_item[$map_key]}')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>{/notempty}
+                            <a style="text-decoration:none" class="ml-5" onClick="common_edit('编辑','{:url(\'\',[\'op\'=>\'edit\'])}','{$data_item[$map_key]}')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a>
                             <a style="text-decoration:none" class="ml-5" onClick="commone_del(this,'{$data_item[$map_key]}')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a>
                         </td>
                     </tr>
@@ -148,7 +163,7 @@
         layer.confirm('确认要删除选中的数据吗？',function(index){
             $.ajax({
                 type: 'POST',
-                url: '{$action.delete.url}',
+                url: '{:url(\'\',[\'op\'=>\'delete\'])}',
                 data:{'{$map_key}':check_val},
                 success: function(data){
                     layer.msg('已删除!',{icon:1,time:1000,end:function(){location.replace(location.href)}});
@@ -174,7 +189,7 @@
         var index = layer.open({
             type: 2,
             title: title,
-            content: url + "/{$map_key}/" + id
+            content: url + "?{$map_key}=" + id
         });
         layer.full(index);
     }
@@ -183,7 +198,7 @@
         layer.confirm('确认要删除吗？',function(index){
             $.ajax({
                 type: 'POST',
-                url: '{$action.delete.url}',
+                url: '{:url(\'\',[\'op\'=>\'delete\'])}',
                 data:{'{$map_key}':id},
                 dataType: 'json',
                 success: function(data){

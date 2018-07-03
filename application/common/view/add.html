@@ -4,7 +4,7 @@
 </head>
 <body>
 <article class="page-container">
-	<form class="form form-horizontal" id="form-add" action="{:url()}" method="post">
+	<form class="form form-horizontal" id="form-add" action="{:url('',['op'=>'add'])}" method="post">
 		{volist name="list" id="item"}
 		{switch name="item.kind"}
 			{case value="text"}

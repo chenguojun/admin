@@ -10,20 +10,14 @@ class Common extends Controller{
     public $crumb_list = [];
     public $table_name = "";
     public $field = [];
-    public $action = [];
     public $search = [];
     public $map_key = "";
-    public $title = "";
     public $notsort = "[0]";
     public $a_name = "新建内容";
     public function set_search($kind=null,$time=null,$name=null){
         $this->search["kind"]=$kind;
         $this->search["time"]=$time;
         $this->search["name"]=$name;
-        return $this;
-    }
-    public function set_title($title){
-        $this->title=$title;
         return $this;
     }
     public function set_name($title){
@@ -34,13 +28,16 @@ class Common extends Controller{
         $this->notsort=$data;
         return $this;
     }
-    public function add_field($name,$description,$kind,$optional=[]){
+    public function add_field($name,$description,$kind,$optional=[],$op=[]){
         $item = [];
         $item["name_e"]=$name;
         $item["name_c"]=$description;
         $item["kind"]=$kind;
         if($optional){
             $item["optional"]=$optional;
+        }
+        if($op){
+            $item["op"]=$op;
         }
         array_push($this->item_list,$item);
         array_push($this->field,$name);
@@ -74,7 +71,17 @@ class Common extends Controller{
             $this->success("添加成功");
             exit();
         }else{
-            $this->assign("list",$this->item_list);
+            $new_list = [];
+            foreach ($this->item_list as $vo){
+                if(empty($vo["op"])){
+                    array_push($new_list,$vo);
+                }else{
+                    foreach ($vo["op"] as $vo1){
+                        if($vo1 == "add") array_push($new_list,$vo);
+                    }
+                }
+            }
+            $this->assign("list",$new_list);
             echo $this->fetch("common@/add");
         }
     }
@@ -103,14 +110,24 @@ class Common extends Controller{
             $common_model->setTable($this->table_name);
             $common_model->allowField(true)->save($data,[$this->map_key=>input($this->map_key)]);
             system_log("编辑内容(id:".$common_model->id .",模块:".$this->a_name.")","内容操作");
-            $this->success("修改成功");
+            $this->success("修改成功",url('ok'));
             exit();
         }else{
             $common_model = model("Common");
             $common_model->setTable($this->table_name);
             $data = $common_model->where($this->map_key,input($this->map_key))->find();
             $this->assign("data",$data);
-            $this->assign("list",$this->item_list);
+            $new_list = [];
+            foreach ($this->item_list as $vo){
+                if(empty($vo["op"])){
+                    array_push($new_list,$vo);
+                }else{
+                    foreach ($vo["op"] as $vo1){
+                        if($vo1 == "edit") array_push($new_list,$vo);
+                    }
+                }
+            }
+            $this->assign("list",$new_list);
             $this->assign("map_key",$this->map_key);
             echo $this->fetch("common@/edit");
         }
@@ -120,7 +137,17 @@ class Common extends Controller{
         return $this;
     }
     public function common_list(){
-        $this->assign("list",$this->item_list);
+        $new_list = [];
+        foreach ($this->item_list as $vo){
+            if(empty($vo["op"])){
+                array_push($new_list,$vo);
+            }else{
+                foreach ($vo["op"] as $vo1){
+                    if($vo1 == "view") array_push($new_list,$vo);
+                }
+            }
+        }
+        $this->assign("list",$new_list);
         $this->assign("crumb_list",$this->crumb_list);
         $common_model = model("Common");
         $common_model->setTable($this->table_name);
@@ -132,32 +159,16 @@ class Common extends Controller{
         }
         $this->assign("data",$data["data_list"]);
         $this->assign("count",$data["count"]);
-        $this->assign("action",$this->action);
         $this->assign("map_key",$this->map_key);
         $this->assign("search",$this->search);
-        $this->assign("title",$this->title);
         $this->assign("notsort",$this->notsort);
+        $this->assign("name",$this->a_name);
         echo $this->fetch("common@/list");
     }
     public function add_Crumb($name,$url=""){
         $crumb["name"]=$name;
         $crumb["url"]=$url;
         array_push($this->crumb_list,$crumb);
-        return $this;
-    }
-    public function set_edit_url($url,$text){
-        $this->action["edit"]["url"] = $url;
-        $this->action["edit"]["text"] = $text;
-        return $this;
-    }
-    public function set_add_url($url,$text){
-        $this->action["add"]["url"] = $url;
-        $this->action["add"]["text"] = $text;
-        return $this;
-    }
-    public function set_delete_url($url,$text){
-        $this->action["delete"]["url"] = $url;
-        $this->action["delete"]["text"] = $text;
         return $this;
     }
     public function set_map($map_key){
@@ -172,6 +183,25 @@ class Common extends Controller{
             $common_model->where($this->map_key,$item)->delete();
         }
         echo json_encode(["status"=>"1"]);
+    }
+    public function common(){
+        $op = input("op");
+        switch ($op){
+            case "":
+                $this->common_list();
+                break;
+            case "add":
+                $this->add();
+                break;
+            case "edit":
+                $this->edit();
+                break;
+            case "delete":
+                $this->delete();
+                break;
+            default:
+                $this->common_list();
+        }
     }
 }
 
