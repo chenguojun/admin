@@ -8,6 +8,10 @@ class Base extends Controller{
     }
     public function _initialize(){
         parent::_initialize();
+        $filename = 'install.lock';
+        if (!file_exists($filename)) {
+            return $this->redirect("system/install/index");
+        }
         $user = Model("User");
         if(get_now_action() != "admin.User.login" && get_now_action() != "admin.User.get_captcha"){
             if(!session("auth_token")){

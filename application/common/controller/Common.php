@@ -68,7 +68,7 @@ class Common extends Controller{
             $common_model->setTable($this->table_name);
             $common_model->allowField(true)->save($data);
             system_log("新建内容(id:".$common_model->id .",模块:".$this->a_name.")","内容操作");
-            $this->success("添加成功");
+            $this->success("添加成功",url('ok'));
             exit();
         }else{
             $new_list = [];

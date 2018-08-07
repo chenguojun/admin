@@ -2,7 +2,7 @@
 namespace app\admin\model;
 
 use think\Model;
-
+use think\db;
 class User extends Model{
     protected $_validate = array(
         array('username', 'require', '用户名不能为空', 1, 'regex', 3),
@@ -144,7 +144,7 @@ class User extends Model{
         if (time()-$user["auth_token_time"] > 7200){
             return false;
         }
-        if(!strpos($this->get_role_value($user["role"]),$action)){
+        if(!strpos($this->get_role_value($user["role"]),$action) && $this->get_role_value($user["role"]) != '0'){
             return false;
         }
         return true;

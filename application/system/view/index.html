@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>羽翼后台管理系统-安装</title>
+    <style>
+        html{
+            height: 100%;
+        }
+        body{
+            margin: 0 auto;
+            height: 100%;
+            background-image: url("/public/static/images/2.jpg");
+            background-size:cover;
+        }
+        #content{
+            margin: 0 auto;
+            background: rgba(211,211,211,0.8);
+            width: 80%;
+            height: 80%;
+            border-radius: 10px;
+            position: relative;
+            top: 50%; /*偏移*/
+            transform: translateY(-50%);
+        }
+        .tab{
+            width: 90%;
+            margin-left: 5%;
+            height: 90%;
+            position: relative;
+            top: 50%; /*偏移*/
+            transform: translateY(-50%);
+        }
+        .div_center{
+            position: relative;
+            top: 50%; /*偏移*/
+            transform: translateY(-50%);
+        }
+        .tab_list{
+            height: 35px;
+            width: 100%;
+        }
+        .tab_tab{
+            text-align: center;
+            background-color: white;
+            opacity: 1;
+            width: 11%;
+            font-size: 22px;
+            height: 100%;
+            float: left;
+            border-color: lightskyblue;
+            font-family:"Microsoft YaHei",微软雅黑,"MicrosoftJhengHei",华文细黑,STHeiti,MingLiu;
+        }
+        .tab_select{
+            border-style: solid none none none;
+        }
+        .tab_free{
+            border-style: none none solid none;
+        }
+        .tab_content{
+            background-color: white;
+            height: calc(100% - 35px);
+            width: 100%;
+            text-align: center;
+        }
+        .icon {
+            width: 1em; height: 1em;
+            vertical-align: -0.15em;
+            fill: currentColor;
+            overflow: hidden;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script type="text/javascript" src="__PUBLIC__/static/js/jquery.min.js"></script>
+    <script type="text/javascript" src="__PUBLIC__/static/js/iconfont.js"></script>
+</head>
+<body>
+    <div id="content">
+        <div class="tab">
+            <div class="tab_list">
+                <div class="tab_tab tab_select" id="tab_tab_1" data-val="1">系统检查</div>
+                <div class="tab_tab tab_free" id="tab_tab_2"  data-val="2" style="margin-left: 10px;">系统配置</div>
+                <div class="tab_tab tab_free" id="tab_tab_3"  data-val="3" style="margin-left: 10px;">系统安装</div>
+            </div>
+            <div id="tab_1" class="tab_content">
+                {php}$ok_to_install=1;{/php}
+                <table class="table">
+                    <tr>
+                        <td>php版本</td>
+                        <td>7.0</td>
+                        <td>{:phpversion()}</td>
+                        {if condition="str_replace('.','',phpversion()) > 700"}
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">✖</td>{php}$ok_to_install=0;{/php}
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>附件上传</td>
+                        <td>2M</td>
+                        <td>{:ini_get('post_max_size')}</td>
+                        {if condition="ini_get('post_max_size') > 2"}
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">✖</td>{php}$ok_to_install=0;{/php}
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>GD库</td>
+                        <td>2.0</td>
+                        <td>{:gd_info()['GD Version']}</td>
+                        <td>✔</td>
+                    </tr>
+                    <tr>
+                        <td>磁盘空间</td>
+                        <td>10M</td>
+                        <td>{:number_format(disk_free_space("/")/1024/1024)}M</td>
+                        {if condition="number_format(disk_free_space('/')/1024/1024) > 10"}
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">✖</td>{php}$ok_to_install=0;{/php}
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>pdo_mysql</td>
+                        <td>模块</td>
+                        {if condition="extension_loaded('pdo_mysql')"}
+                        <td>支持</td>
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">不支持</td>{php}$ok_to_install=0;{/php}
+                        <td class="danger">✖</td>
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>file_get_contents</td>
+                        <td>函数</td>
+                        {if condition="function_exists('file_get_contents') eq true"}
+                        <td>支持</td>
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">不支持</td>{php}$ok_to_install=0;{/php}
+                        <td class="danger">✖</td>
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>curl_init</td>
+                        <td>函数</td>
+                        {if condition="function_exists('curl_init') eq true"}
+                        <td>支持</td>
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">不支持</td>{php}$ok_to_install=0;{/php}
+                        <td class="danger">✖</td>
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>./public/uploads</td>
+                        <td>读写性</td>
+                        {if condition="is_writable('../public/uploads') eq true"}
+                        <td>可写</td>
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">不可写</td>{php}$ok_to_install=0;{/php}
+                        <td class="danger">✖</td>
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>./public</td>
+                        <td>读写性</td>
+                        {if condition="is_writable('../public') eq true"}
+                        <td>可写</td>
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">不可写</td>{php}$ok_to_install=0;{/php}
+                        <td class="danger">✖</td>
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>./runtimes</td>
+                        <td>读写性</td>
+                        {if condition="is_writable('../runtime') eq true"}
+                        <td>可写</td>
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">不可写</td>{php}$ok_to_install=0;{/php}
+                        <td class="danger">✖</td>
+                        {/if}
+                    </tr>
+                    <tr>
+                        <td>./application/database.php</td>
+                        <td>读写性</td>
+                        {if condition="is_writable('../application/database.php') eq true"}
+                        <td>可写</td>
+                        <td>✔</td>
+                        {else /}
+                        <td class="danger">不可写</td>{php}$ok_to_install=0;{/php}
+                        <td class="danger">✖</td>
+                        {/if}
+                    </tr>
+                </table>
+                <button type="button" class="btn btn-default btn-step" data-val="2">下一步</button>
+            </div>
+            <div id="tab_2" style="display: none" class="tab_content">
+                <div style="width: 80%;margin: 0 auto;padding-top: 20px">
+                    <form class="form-horizontal" id="install_info">
+                        <div class="form-group">
+                            <label for="db_ip" class="col-sm-2 control-label">数据库地址</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control check-input" value="127.0.0.1" id="db_ip" name="db_ip" placeholder="数据库地址">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="db_name" class="col-sm-2 control-label">数据库名</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control check-input" id="db_name" name="db_name" placeholder="数据库名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="db_username" class="col-sm-2 control-label">数据库用户名</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control check-input" value="root" id="db_username" name="db_username" placeholder="数据库用户名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="db_password" class="col-sm-2 control-label">数据库密码</label>
+                            <div class="col-xs-8">
+                                <input type="password" class="form-control check-input" value="root" id="db_password" name="db_password" placeholder="数据库密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="db_port" class="col-sm-2 control-label">数据库端口</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control check-input" value="3306" id="db_port" name="db_port" placeholder="数据库端口">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin_username" class="col-sm-2 control-label">管理员用户名</label>
+                            <div class="col-xs-8">
+                                <input type="text" class="form-control check-input" id="admin_username" name="admin_username" placeholder="管理员用户名">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin_password" class="col-sm-2 control-label">管理员密码</label>
+                            <div class="col-xs-8">
+                                <input type="password" class="form-control check-input" id="admin_password" name="admin_password" placeholder="管理员密码">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin_password_confirm" class="col-sm-2 control-label">确认密码</label>
+                            <div class="col-xs-8">
+                                <input type="password" class="form-control check-input" id="admin_password_confirm" name="admin_password_confirm" placeholder="确认密码">
+                            </div>
+                        </div>
+                    </form>
+                    <button type="button" class="btn btn-default btn-step" data-val="1">上一步</button>
+                    <button type="button" class="btn btn-default btn-step" data-val="3">开始安装系统</button>
+                </div>
+
+            </div>
+            <div id="tab_3" style="display: none" class="tab_content">
+                <div style="font-size: 20px;padding-top: 10px"> 检查数据库信息 <svg class="icon" aria-hidden="true" id="1_wait"><use xlink:href="#icon-sync"></use></svg><svg class="icon" aria-hidden="true" id="1_ok"><use xlink:href="#icon-check"></use></svg><svg class="icon" aria-hidden="true" id="1_wrong"><use xlink:href="#icon-close"></use></svg></div>
+                <div style="font-size: 20px;padding-top: 10px"> 新建数据库 <svg class="icon" aria-hidden="true" id="2_wait"><use xlink:href="#icon-sync"></use></svg><svg class="icon" aria-hidden="true" id="2_ok"><use xlink:href="#icon-check"></use></svg><svg class="icon" aria-hidden="true" id="2_wrong"><use xlink:href="#icon-close"></use></svg></div>
+                <div style="font-size: 20px;padding-top: 10px"> 保存数据库信息 <svg class="icon" aria-hidden="true" id="3_wait"><use xlink:href="#icon-sync"></use></svg><svg class="icon" aria-hidden="true" id="3_ok"><use xlink:href="#icon-check"></use></svg><svg class="icon" aria-hidden="true" id="3_wrong"><use xlink:href="#icon-close"></use></svg></div>
+                <div style="font-size: 20px;padding-top: 10px"> 新建数据库数据表 <svg class="icon" aria-hidden="true"  id="4_wait"><use xlink:href="#icon-sync"></use></svg><svg class="icon" aria-hidden="true" id="4_ok"><use xlink:href="#icon-check"></use></svg><svg class="icon" aria-hidden="true" id="4_wrong"><use xlink:href="#icon-close"></use></svg></div>
+                <div style="font-size: 20px;padding-top: 10px"> 保存管理员信息 <svg class="icon" aria-hidden="true" id="5_wait"><use xlink:href="#icon-sync"></use></svg><svg class="icon" aria-hidden="true" id="5_ok"><use xlink:href="#icon-check"></use></svg><svg class="icon" aria-hidden="true" id="5_wrong"><use xlink:href="#icon-close"></use></svg></div>
+                <button type="button" class="btn btn-default" id="install_ok" disabled="disabled" onclick="enter_admin();">进入后台</button>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript">
+    function enter_admin(){
+        window.location.href="{:url('admin/user/login')}";
+    }
+    $(document).ready(function () {
+        for (b=1;b<=5;b++){
+            $("#"+b+"_wrong").hide();
+            $("#"+b+"_ok").hide();
+        }
+    });
+    function setstatus(item,status) {
+        switch (status){
+            case 3:
+                $("#"+item+"_wrong").hide();
+                $("#"+item+"_ok").hide();
+                $("#"+item+"_wait").show();
+                break;
+            case 1:
+                $("#"+item+"_wrong").hide();
+                $("#"+item+"_ok").show();
+                $("#"+item+"_wait").hide();
+                break;
+            case 0:
+                $("#"+item+"_wrong").show();
+                $("#"+item+"_ok").hide();
+                $("#"+item+"_wait").hide();
+                break;
+        }
+    }
+    function install() {
+        $.post("{:url('check_db_info')}",$("#install_info").serialize(),function (data) {
+            $("#1_wait").hide();
+            if(data.status == 1){
+                setstatus(1,1);
+                install_1();
+            }else{
+                setstatus(1,0);
+                alert("安装失败," + data.reason);
+            }
+        },"json")
+    }
+    function install_1() {
+        $.post("{:url('create_db')}",$("#install_info").serialize(),function (data) {
+            $("#2_wait").hide();
+            if(data.status == 1){
+                setstatus(2,1);
+                install_2();
+            }else{
+                setstatus(2,0);
+                alert("安装失败," + data.reason);
+            }
+        },"json")
+    }
+    function install_2() {
+        $.post("{:url('save_db_info')}",$("#install_info").serialize(),function (data) {
+            $("#3_wait").hide();
+            if(data.status == 1){
+                setstatus(3,1);
+                install_3();
+            }else{
+                setstatus(3,0);
+                alert("安装失败," + data.reason);
+            }
+        },"json")
+    }
+    function install_3() {
+        $.post("{:url('create_table')}",$("#install_info").serialize(),function (data) {
+            $("#4_wait").hide();
+            if(data.status == 1){
+                setstatus(4,1);
+                install_4();
+            }else{
+                setstatus(4,0);
+                alert("安装失败," + data.reason);
+            }
+        },"json")
+    }
+    function install_4() {
+        $.post("{:url('save_admin_info')}",$("#install_info").serialize(),function (data) {
+            $("#5_wait").hide();
+            if(data.status == 1){
+                setstatus(5,1);
+                $("#install_ok").removeAttr("disabled");
+            }else{
+                setstatus(5,0);
+                alert("安装失败," + data.reason);
+            }
+        },"json")
+    }
+    var now = 1;
+    var system_ok = {$ok_to_install};
+    $(".btn-step").click(function () {
+        switch ($(this).data("val")) {
+            case 1:
+                $("#tab_1").show();
+                $("#tab_2").hide();
+                $("#tab_3").hide();
+                $("#tab_tab_1").removeClass("tab_free");
+                $("#tab_tab_1").addClass("tab_select");
+                $("#tab_tab_2").addClass("tab_free");
+                $("#tab_tab_2").removeClass("tab_select");
+                $("#tab_tab_3").addClass("tab_free");
+                $("#tab_tab_3").removeClass("tab_select");
+                break;
+            case 2:
+                if(system_ok != 1){
+                    alert('系统配置不达标，请检查');
+                    return;
+                }
+                $("#tab_2").show();
+                $("#tab_1").hide();
+                $("#tab_3").hide();
+                $("#tab_tab_1").addClass("tab_free");
+                $("#tab_tab_1").removeClass("tab_select");
+                $("#tab_tab_2").removeClass("tab_free");
+                $("#tab_tab_2").addClass("tab_select");
+                $("#tab_tab_3").addClass("tab_free");
+                $("#tab_tab_3").removeClass("tab_select");
+                break;
+            case 3:
+                var input_ok = 1;
+                $(".check-input").each(function () {
+                    if($(this).val() == ""){
+                        $(this).parent().parent().addClass("has-error");
+                        input_ok=0;
+                    }else{
+                        $(this).parent().parent().removeClass("has-error");
+                    }
+                });
+                if($("#admin_password").val() != $("#admin_password_confirm").val()){
+                    alert("两次密码输入不一致，请重新输入");
+                    input_ok=0;
+                }
+                if(input_ok == 0)return;
+                $("#tab_3").show();
+                $("#tab_1").hide();
+                $("#tab_2").hide();
+                $("#tab_tab_1").addClass("tab_free");
+                $("#tab_tab_1").removeClass("tab_select");
+                $("#tab_tab_2").addClass("tab_free");
+                $("#tab_tab_2").removeClass("tab_select");
+                $("#tab_tab_3").addClass("tab_select");
+                $("#tab_tab_3").removeClass("tab_free");
+                install();
+                break;
+        }
+    })
+</script>
+</body>
+</html>

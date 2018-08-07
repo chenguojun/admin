@@ -13,10 +13,9 @@ class System extends Base{
             ->add_field("username","用户名","text")
             ->add_field("ip","客户端ip","text")
             ->add_field("time","时间","text")
-            ->set_delete_url(url("article_delete"),"删除资讯")
             ->table_name("system_log")
             ->set_map("id")
-            ->set_title("系统日志")
+            ->set_name("日志")
             ->set_notsort("[0,3,7]")
             ->common_list();
     }

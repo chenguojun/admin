@@ -8,60 +8,26 @@ use think\Model;
 
 class User extends Base{
     public function user_list(){
+        $user = Model("User");
+        $role_list = $user->get_role_rule();
+        $role_list1 = [];
+        foreach ($role_list as $item){
+            $role_list1[$item["id"]]=$item["role_name"];
+        }
         $list = new Common;
         $list->add_Crumb("用户管理",Url())
             ->add_Crumb("用户列表","")
             ->add_field("id","id","id")
-            ->add_field("username","用户名","text")
-            ->set_edit_url(url("user_edit",[],""),"编辑用户")
-            ->set_add_url(url("user_add"),"新建用户")
-            ->set_delete_url(url("user_delete"),"删除用户")
-            ->table_name("user")
-            ->set_map("id")
-            ->set_title("用户列表")
-            ->set_notsort("[0,3]")
-            ->common_list();
-    }
-    public function user_add(){
-        $user = Model("User");
-        $role_list = $user->get_role_rule();
-        $role_list1 = [];
-        foreach ($role_list as $item){
-            $role_list1[$item["id"]]=$item["role_name"];
-        }
-        $list = new Common;
-        $list->add_Crumb("用户管理",Url())
-            ->add_Crumb("用户列表","")
             ->add_field("username","用户名","text",["validate"=>"require"])
-            ->add_field("password","密码","password",["validate"=>"require","function"=>"md5"])
-            ->add_field("repassword","确认密码","repassword",["validate"=>"require|confirm:password","function"=>"md5"])
-            ->add_field("role","账号角色","select",["options"=>$role_list1])
-            ->add_field("hidden","隐藏的","hidden",["value"=>"123"])
+            ->add_field("password","密码","password",["validate"=>"require","function"=>"md5"],["add","edit"])
+            ->add_field("repassword","确认密码","repassword",["validate"=>"require|confirm:password","function"=>"md5"],["add","edit"])
+            ->add_field("role","账号角色","select",["options"=>$role_list1],["add","edit"])
+            ->add_field("hidden","隐藏的","hidden",["value"=>"123"],["add","edit"])
             ->table_name("user")
-            ->set_name("用户增加")
-            ->set_title("用户列表")
-            ->add();
-    }
-    public function user_edit(){
-        $user = Model("User");
-        $role_list = $user->get_role_rule();
-        $role_list1 = [];
-        foreach ($role_list as $item){
-            $role_list1[$item["id"]]=$item["role_name"];
-        }
-        $list = new Common;
-        $list->add_field("username","用户名","text",["validate"=>"require"])
-            ->add_field("role","账号角色","select",["options"=>$role_list1])
-            ->table_name("user")
-            ->set_name("用户编辑")
             ->set_map("id")
-            ->edit();
-    }
-    public function user_delete(){
-        if(request()->isPost()){
-            $list = new Common;
-            $list->table_name("user")->set_name("删除用户")->set_map("id")->delete();
-        }
+            ->set_name("用户")
+            ->set_notsort("[0,3]")
+            ->common();
     }
     public function role(){
         $role_1ist = db("role")->select();
@@ -124,6 +90,13 @@ class User extends Base{
             system_log("登录系统成功","登录系统");
             $this->success('登录成功', url("Index/index"));
         }else{
+            $user = Model("admin/User");
+            if(session("auth_token")){
+                return $this->redirect(url("Index/index"));
+            }
+            if($user->check_auth_token(session("auth_token"))){
+                return $this->redirect(url("Index/index"));
+            }
             echo $this->fetch("admin@/login");
         }
     }

@@ -19,6 +19,32 @@
 					</div>
 				</div>
 			{/case}
+			{case value="password"}
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="password" class="input-text"
+						   {notempty name="$item.optional"}
+						   {foreach $item.optional as $key=>$value}
+					{$key}="{$value}"
+					{/foreach}{/notempty}
+					id="{$item.name_e}" name="{$item.name_e}">
+				</div>
+			</div>
+			{/case}
+			{case value="repassword"}
+			<div class="row cl">
+				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+				<div class="formControls col-xs-8 col-sm-9">
+					<input type="password" class="input-text"
+						   {notempty name="$item.optional"}
+						   {foreach $item.optional as $key=>$value}
+					{$key}="{$value}"
+					{/foreach}{/notempty}
+					id="{$item.name_e}" name="{$item.name_e}">
+				</div>
+			</div>
+			{/case}
 			{case value="select"}
 				<div class="row cl">
 					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
