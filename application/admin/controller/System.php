@@ -16,7 +16,8 @@ class System extends Base{
             ->table_name("system_log")
             ->set_map("id")
             ->set_name("日志")
-            ->set_notsort("[0,3,7]")
-            ->common_list();
+            ->set_buttons(false,false,false)
+            ->set_notsort("[0,3]")
+            ->common();
     }
 }

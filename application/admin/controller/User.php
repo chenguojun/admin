@@ -91,9 +91,6 @@ class User extends Base{
             $this->success('登录成功', url("Index/index"));
         }else{
             $user = Model("admin/User");
-            if(session("auth_token")){
-                return $this->redirect(url("Index/index"));
-            }
             if($user->check_auth_token(session("auth_token"))){
                 return $this->redirect(url("Index/index"));
             }

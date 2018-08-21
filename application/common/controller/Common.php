@@ -12,12 +12,19 @@ class Common extends Controller{
     public $field = [];
     public $search = [];
     public $map_key = "";
+    public $buttons = ["delete"=>true,"add"=>true,"edit"=>true];
     public $notsort = "[0]";
     public $a_name = "新建内容";
     public function set_search($kind=null,$time=null,$name=null){
         $this->search["kind"]=$kind;
         $this->search["time"]=$time;
         $this->search["name"]=$name;
+        return $this;
+    }
+    public function set_buttons($add=true,$edit=true,$delete=true){
+        $this->buttons["add"]=$add;
+        $this->buttons["edit"]=$edit;
+        $this->buttons["delete"]=$delete;
         return $this;
     }
     public function set_name($title){
@@ -44,6 +51,7 @@ class Common extends Controller{
         return $this;
     }
     public function add(){
+        if(!$this->buttons["add"]) $this->error("此功能未启用",url('ok'));
         if(request()->isPost()){
             $data = input("");
             $validate_rule = ["__token__"=>"require|token"];
@@ -72,20 +80,25 @@ class Common extends Controller{
             exit();
         }else{
             $new_list = [];
+            $count = 0;
             foreach ($this->item_list as $vo){
                 if(empty($vo["op"])){
                     array_push($new_list,$vo);
                 }else{
                     foreach ($vo["op"] as $vo1){
                         if($vo1 == "add") array_push($new_list,$vo);
+
                     }
                 }
+                if($vo["kind"] == "file" || $vo["kind"] == "image" || $vo["kind"] == "images") $count++;
             }
             $this->assign("list",$new_list);
+            $this->assign("count",$count);
             echo $this->fetch("common@/add");
         }
     }
     public function edit(){
+        if(!$this->buttons["edit"]) $this->error("此功能未启用",url('ok'));
         if(request()->isPost()){
             $data = input("");
             $validate_rule = ["__token__"=>"require|token"];
@@ -118,6 +131,7 @@ class Common extends Controller{
             $data = $common_model->where($this->map_key,input($this->map_key))->find();
             $this->assign("data",$data);
             $new_list = [];
+            $count = 0;
             foreach ($this->item_list as $vo){
                 if(empty($vo["op"])){
                     array_push($new_list,$vo);
@@ -126,8 +140,10 @@ class Common extends Controller{
                         if($vo1 == "edit") array_push($new_list,$vo);
                     }
                 }
+                if($vo["kind"] == "file" || $vo["kind"] == "image" || $vo["kind"] == "images") $count++;
             }
             $this->assign("list",$new_list);
+            $this->assign("count",$count);
             $this->assign("map_key",$this->map_key);
             echo $this->fetch("common@/edit");
         }
@@ -162,6 +178,7 @@ class Common extends Controller{
         $this->assign("map_key",$this->map_key);
         $this->assign("search",$this->search);
         $this->assign("notsort",$this->notsort);
+        $this->assign("buttons",$this->buttons);
         $this->assign("name",$this->a_name);
         echo $this->fetch("common@/list");
     }
@@ -176,6 +193,7 @@ class Common extends Controller{
         return $this;
     }
     public function delete(){
+        if(!$this->buttons["delete"]) $this->error("此功能未启用",url('ok'));
         $common_model = model("Common");
         $common_model->setTable($this->table_name);
         foreach (input($this->map_key."/a") as $item){

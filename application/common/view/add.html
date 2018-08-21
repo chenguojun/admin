@@ -9,7 +9,7 @@
 		{switch name="item.kind"}
 			{case value="text"}
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<input type="text" class="input-text"
 							   {notempty name="$item.optional"}
@@ -21,34 +21,34 @@
 				</div>
 			{/case}
 			{case value="password"}
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<input type="password" class="input-text"
-						   {notempty name="$item.optional"}
-						   {foreach $item.optional as $key=>$value}
-					{$key}="{$value}"
-					{/foreach}{/notempty}
-					id="{$item.name_e}" name="{$item.name_e}">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="password" class="input-text"
+							   {notempty name="$item.optional"}
+							   {foreach $item.optional as $key=>$value}
+						{$key}="{$value}"
+						{/foreach}{/notempty}
+						id="{$item.name_e}" name="{$item.name_e}">
+					</div>
 				</div>
-			</div>
 			{/case}
 			{case value="repassword"}
-			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
-				<div class="formControls col-xs-8 col-sm-9">
-					<input type="password" class="input-text"
-						   {notempty name="$item.optional"}
-						   {foreach $item.optional as $key=>$value}
-					{$key}="{$value}"
-					{/foreach}{/notempty}
-					id="{$item.name_e}" name="{$item.name_e}">
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<input type="password" class="input-text"
+							   {notempty name="$item.optional"}
+							   {foreach $item.optional as $key=>$value}
+						{$key}="{$value}"
+						{/foreach}{/notempty}
+						id="{$item.name_e}" name="{$item.name_e}">
+					</div>
 				</div>
-			</div>
 			{/case}
 			{case value="select"}
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<span class="select-box">
 						<select name="{$item.name_e}" class="select">
@@ -66,7 +66,7 @@
 			{/case}
 			{case value="textarea"}
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<textarea name="{$item.name_e}" id="{$item.name_e}" class="textarea" onKeyUp="textarealength(this,'{$item.optional.max}')"></textarea>
 						<p class="textarea-numberbar"><em id="{$item.name_e}_length" class="textarea-length">0</em>/{$item.optional.max}</p>
@@ -75,7 +75,7 @@
 			{/case}
 			{case value="checkbox"}
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 						<div class="check-box">
 							<input type="checkbox" name="{$item.name_e}" id="checkbox_{$item.name_e}">
@@ -86,7 +86,7 @@
 			{/case}
 			{case value="switch"}
 			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+				<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 				<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 					<div class="switch">
 						<input type="checkbox" checked />
@@ -99,7 +99,7 @@
 			{/case}
 			{case value="image"}
 			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+				<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 				<div class="formControls col-xs-8 col-sm-9">
 					<div class="uploader-list-container">
 						<input type="hidden" name="{$item.name_e}" class="picture_list" value="">
@@ -124,7 +124,7 @@
 			{/case}
 			{case value="images"}
 			<div class="row cl">
-				<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+				<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 				<div class="formControls col-xs-8 col-sm-9">
 					<div class="uploader-list-container">
 						<input type="hidden" name="{$item.name_e}" class="picture_list" value="">
@@ -149,14 +149,14 @@
 			{/case}
 			{case value="editor"}
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9"><script class="editor" name="{$item.name_e}" id="editor_{$item.name_e}" type="text/plain" style="width:100%;height:400px;"></script></div>
 
 				</div>
 			{/case}
 			{case value="date"}
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9">
 						<input type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" id="{$item.name_e}" name="{$item.name_e}" class="input-text Wdate" style="width:180px;">
 					</div>
@@ -164,7 +164,7 @@
 			{/case}
 			{case value="radio"}
 				<div class="row cl">
-					<label class="form-label col-xs-4 col-sm-2">{notempty name="$item.optional.require"}{if condition="$item.optional.require eq true"}<span class="c-red">*</span>{/if}{/notempty}{$item.name_c}：</label>
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
 					<div class="formControls col-xs-8 col-sm-9 skin-minimal">
 						{foreach $item.optional.options as $key=>$value}
 							{if condition="is_array($value) eq true"}
@@ -182,8 +182,25 @@
 					</div>
 				</div>
 			{/case}
+			{case value="file"}
+				<div class="row cl">
+					<label class="form-label col-xs-4 col-sm-2">{if condition="empty($item.optional.validate) eq false AND strpos($item.optional.validate,'require') eq false"}<span class="c-red">*</span>{/if}{$item.name_c}：</label>
+					<div class="formControls col-xs-8 col-sm-9">
+						<div class="file-uploader" style="margin-top:3px">
+							<span class="filename" data-fileid="">请选择文件</span>
+							<div class="btns btn-upload-select"><div>选择文件</div></div>
+							<button class="btn btn-default btn-upload-start" style="display:none" type="button">开始上传</button>
+							<button class="btn btn-default btn-upload-cancel" style="display:none" type="button">X</button>
+							<input type="hidden" name="{$item.name_e}" class="file-upload-path" value="" />
+						</div>
+					</div>
+				</div>
+			{/case}
 		{/switch}
 		{/volist}
+
+
+
 
 		<input type="hidden" name="__token__" value="{$Request.token}" />
 
@@ -208,6 +225,67 @@
 <script type="text/javascript" src="/page/lib/ueditor/1.4.3/ueditor.config.js"></script>
 <script type="text/javascript" src="/page/lib/ueditor/1.4.3/ueditor.all.min.js"> </script>
 <script type="text/javascript" src="/page/lib/ueditor/1.4.3/lang/zh-cn/zh-cn.js"></script>
+<script type="text/javascript">
+	{php} if($count > 1)echo "alert();";{/php}
+    var file_uploader = new Array();
+	$(".file-uploader").each(function (index) {
+        var $item = $(this);
+        var $start_btn = $item.find(".btn-upload-start");
+        var $cancel_btn = $item.find(".btn-upload-cancel");
+        var $select_btn = $item.find(".btn-upload-select");
+		file_uploader[index] = WebUploader.create({
+            swf: 'static/res/Uploader.swf',   //ie下很重要
+            server: '{:url(\'File/upload\')}',
+            fileNumLimit: 1,
+            fileVal:'image',
+            duplicate:false
+        });
+        file_uploader[index].addButton({
+            id: $select_btn,
+		});
+        // 当有文件被添加进队列的时候
+        file_uploader[index].on( 'fileQueued', function( file ) {
+            $item.find(".filename").html(file.name);
+            $item.find(".filename").attr("data-fileid",file.id);
+            $select_btn.hide();
+            $start_btn.show();
+            $start_btn.html("开始上传");
+            $start_btn.removeAttr("disabled");
+            $cancel_btn.show();
+        });
+        file_uploader[index].on( 'uploadProgress', function( file, percentage ) {
+            $start_btn.attr("disabled","disabled");
+            $start_btn.html(parseInt(percentage * 100) + '%');
+        });
+        file_uploader[index].on( 'fileDequeued', function( file ) {
+            $select_btn.show();
+            $start_btn.hide();
+            $cancel_btn.hide();
+            $item.find(".filename").html("请选择文件");
+        });
+        file_uploader[index].on( 'uploadSuccess', function( file, response  ) {
+            if(response.status == 1){
+                $start_btn.hide();
+                $($item.find(".file-upload-path")).val(response.savename);
+                alert("上传成功");
+            }else{
+                file_uploader[index].removeFile( file , true);
+                alert("上传失败," + response.reason);
+            }
+        });
+        $cancel_btn.on('click',function () {
+            if(file_uploader[index].isInProgress()){
+                file_uploader[index].cancelFile($item.find(".filename").attr("data-fileid"));
+            }
+            file_uploader[index].removeFile($item.find(".filename").attr("data-fileid"));
+            $($item.find(".file-upload-path")).val("");
+        });
+        $start_btn.on('click',function () {
+            file_uploader[index].upload();
+        })
+    });
+</script>
+
 <script type="text/javascript">
 	var editor = {};
 	$(".editor").each(function (index) {
@@ -281,9 +359,9 @@
 
             chunked: false,//是否分片处理大文件的上传
 
-            server: '{:url(\'File/upload\')}',//上传地址    //后台接受地址
+            server: '{:url(\'File/upload_file\')}',//上传地址    //后台接受地址
 
-            fileVal:'image',
+            fileVal:'file',
 
             fileNumLimit: i,//一次最多上传文件个数
 
